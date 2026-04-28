@@ -75,17 +75,6 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-
-        joystick.rightBumper().whileTrue(
-    Commands.run(() -> {
-        System.out.println(
-            "LY: " + joystick.getLeftY()
-            + " LX: " + joystick.getLeftX()
-            + " RX: " + joystick.getRightX()
-            + " MaxSpeed: " + MaxSpeed
-        );
-    })
-);
     }
 
     public Command getAutonomousCommand() {
