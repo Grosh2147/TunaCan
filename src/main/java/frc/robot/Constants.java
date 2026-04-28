@@ -18,7 +18,7 @@ public final class Constants {
     // Turn speed used while no target is visible.
     // Too low = robot searches forever.
     // Too high = robot whips around and overshoots targets.
-    public static final double SEARCH_TURN = 0.18;
+    public static final double SEARCH_TURN = 1.0;
 
     // Main proportional gain for turning to center the target using tx.
     // Turn output = tx * TURN_kP (+ TURN_MIN when needed).
@@ -87,7 +87,7 @@ public final class Constants {
 
     // Desired final stopping distance from the target.
     // This is the "go to here" setpoint.
-    public static final double TARGET_DISTANCE_METERS = 1.75;
+    public static final double TARGET_DISTANCE_METERS = 0.75;
   }
 
   private Constants() {}
