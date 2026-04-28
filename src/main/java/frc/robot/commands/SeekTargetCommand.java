@@ -40,7 +40,7 @@ public class SeekTargetCommand extends Command {
   public void execute() {
     if (limelightSubsystem.hasTarget()) {
       stopDrivetrain();
-      limelightSubsystem.setVisionState(2.0); // aiming
+      limelightSubsystem.setVisionState(2.0); // has target / aiming = blink yellow
       return;
     }
 
@@ -53,18 +53,18 @@ public class SeekTargetCommand extends Command {
             .withVelocityY(0.0)
             .withRotationalRate(rotationalRate));
 
-    limelightSubsystem.setVisionState(1.0); // seeking
+    limelightSubsystem.setVisionState(1.0); // seeking / no target = blink red
   }
 
   @Override
   public void end(boolean interrupted) {
     stopDrivetrain();
-    limelightSubsystem.setVisionState(0.0);
+    limelightSubsystem.setVisionState(0.0); // idle = fire
   }
 
   @Override
   public boolean isFinished() {
-    return limelightSubsystem.hasTarget();
+    return false; // keep running while left bumper is held
   }
 
   private void stopDrivetrain() {
