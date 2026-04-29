@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANdleConfiguration;
-import com.ctre.phoenix6.controls.FireAnimation;
+import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
 import com.ctre.phoenix6.hardware.CANdle;
-import com.ctre.phoenix6.signals.StripTypeValue;
+import com.ctre.phoenix6.signals.LarsonBounceValue;
 import com.ctre.phoenix6.signals.RGBWColor;
+import com.ctre.phoenix6.signals.StripTypeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,18 +20,19 @@ public class CANdleSubsystem extends SubsystemBase {
 
   // CANdle onboard LEDs are 0-7.
   // External LED strip starts at index 8.
-  private static final int LED_START_INDEX = 8;
+  private static final int LED_START_INDEX = 0;
 
-  // Change this to the number of LEDs on your external strip.
-  private static final int LED_COUNT = 60;
+  // Change this to the number of LEDs you want controlled.
+  // If LED_START_INDEX = 0 and LED_COUNT = 17:
+  // 8 built-in LEDs + first 9 strip LEDs are controlled.
+  private static final int LED_COUNT = 17;
 
-  // Last external LED index.
   private static final int LED_END_INDEX = LED_START_INDEX + LED_COUNT - 1;
 
   private final LimelightSubsystem limelight;
 
   private enum LedMode {
-    IDLE_FIRE,
+    IDLE_LARSON,
     SEEKING_BLINK_RED,
     ON_TARGET_SOLID_YELLOW,
     AIMING_BLINK_YELLOW,
@@ -42,17 +44,18 @@ public class CANdleSubsystem extends SubsystemBase {
   private final RGBWColor red = new RGBWColor(255, 0, 0);
   private final RGBWColor yellow = new RGBWColor(255, 180, 0);
   private final RGBWColor green = new RGBWColor(0, 255, 0);
+  private final RGBWColor white = new RGBWColor(255, 255, 255);
 
-public CANdleSubsystem(LimelightSubsystem limelight) {
-  this.limelight = limelight;
+  public CANdleSubsystem(LimelightSubsystem limelight) {
+    this.limelight = limelight;
 
-  CANdleConfiguration config = new CANdleConfiguration();
+    CANdleConfiguration config = new CANdleConfiguration();
 
-  config.LED.StripType = StripTypeValue.GRB;
-  config.LED.BrightnessScalar = 0.5;
+    config.LED.StripType = StripTypeValue.RGB;
+    config.LED.BrightnessScalar = 0.5;
 
-  candle.getConfigurator().apply(config);
-}
+    candle.getConfigurator().apply(config);
+  }
 
   @Override
   public void periodic() {
@@ -87,20 +90,20 @@ public CANdleSubsystem(LimelightSubsystem limelight) {
       return LedMode.AIMING_BLINK_YELLOW;
     }
 
-    return LedMode.IDLE_FIRE;
+    return LedMode.IDLE_LARSON;
   }
 
   private void applyMode(LedMode mode) {
     candle.clearAllAnimations();
 
     switch (mode) {
-      case IDLE_FIRE:
+      case IDLE_LARSON:
         candle.setControl(
-            new FireAnimation(LED_START_INDEX, LED_END_INDEX)
-                .withBrightness(0.75)
-                .withSparking(0.7)
-                .withCooling(0.5)
-                .withFrameRate(50));
+            new LarsonAnimation(LED_START_INDEX, LED_END_INDEX)
+                .withColor(white)
+                .withSize(3)
+                .withBounceMode(LarsonBounceValue.Front)
+                .withFrameRate(20));
         break;
 
       case SEEKING_BLINK_RED:

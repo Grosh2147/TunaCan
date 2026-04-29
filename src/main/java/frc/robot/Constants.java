@@ -87,7 +87,7 @@ public final class Constants {
 
     // Desired final stopping distance from the target.
     // This is the "go to here" setpoint.
-    public static final double TARGET_DISTANCE_METERS = 0.75;
+    public static final double TARGET_DISTANCE_METERS = 1.5;
   }
 
   private Constants() {}
